@@ -24,8 +24,6 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int set_priority(int, int);
-int mprotect(void*, int);
-int munprotect(void*, int);
 
 // ulib.c
 int stat(const char*, struct stat*);

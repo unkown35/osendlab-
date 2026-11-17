@@ -91,8 +91,6 @@ extern int sys_fork(void);
 extern int sys_fstat(void);
 extern int sys_getpid(void);
 extern int sys_kill(void);
-extern int sys_mprotect(void);
-extern int sys_munprotect(void);
 extern int sys_link(void);
 extern int sys_mkdir(void);
 extern int sys_mknod(void);
@@ -130,8 +128,6 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_set_priority] sys_set_priority,
-[SYS_mprotect] sys_mprotect,
-[SYS_munprotect] sys_munprotect,
 };
 
 void

@@ -53,59 +53,6 @@ sys_set_priority(void)
   return set_priority(pid, priority);
 }
 
-// Change write permission for len whole pages beginning at addr.
-static int
-protect_pages(uint addr, int len, int writable)
-{
-  struct proc *curproc = myproc();
-  pte_t *pte;
-  uint i;
-
-  if(addr % PGSIZE != 0 || len <= 0)
-    return -1;
-  if(addr > curproc->sz || (uint)len > (curproc->sz - addr) / PGSIZE)
-    return -1;
-
-  // Validate the complete range before changing any PTE.
-  for(i = 0; i < (uint)len; i++){
-    pte = getpte(curproc->pgdir, (void*)(addr + i * PGSIZE));
-    if(pte == 0 || (*pte & PTE_P) == 0)
-      return -1;
-  }
-
-  for(i = 0; i < (uint)len; i++){
-    pte = getpte(curproc->pgdir, (void*)(addr + i * PGSIZE));
-    if(writable)
-      *pte |= PTE_W;
-    else
-      *pte &= ~PTE_W;
-  }
-  lcr3(V2P(curproc->pgdir));
-  return 0;
-}
-
-int
-sys_mprotect(void)
-{
-  int addr;
-  int len;
-
-  if(argint(0, &addr) < 0 || argint(1, &len) < 0)
-    return -1;
-  return protect_pages((uint)addr, len, 0);
-}
-
-int
-sys_munprotect(void)
-{
-  int addr;
-  int len;
-
-  if(argint(0, &addr) < 0 || argint(1, &len) < 0)
-    return -1;
-  return protect_pages((uint)addr, len, 1);
-}
-
 int
 sys_sbrk(void)
 {
